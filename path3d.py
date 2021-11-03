@@ -178,6 +178,7 @@ def looping_points(steps=21):
     ))
     return Xpoints
 
+""""
 #### Code de test ####
 
 if __name__ == '__main__':
@@ -238,4 +239,4 @@ if __name__ == '__main__':
               color='g', linewidth=0.5, label='N')
     plt.legend()
     plt.show()
-    
+"""
