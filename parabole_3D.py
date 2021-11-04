@@ -4,17 +4,28 @@ import matplotlib.pyplot as plt
 from simulation_3d import *
 #from mpl_toolkits.mplot3d import Axes3D
 
+# fichiers tests pour essayer de voir avec une parabole 2D, pour voir si le modèle est cohérent
+
 # Paramètre du temps de simulation
 t = 0
-tEnd = 3
+tEnd = 14
 dt = 0.033
 steps = int(tEnd//dt)
 
-# points de passage
-xyzPoints = p3d.looping_points()
+def parabole_points(L, H):
+    A = 4*H/L**2  # parabole d'équation z = A * x**2
+    # coordonnée horizontale: array[points] * [m]
 
-# sauvetage des points dans un fichier
-np.savetxt('looping_points.txt', xyzPoints.T, fmt='%10.5f')
+    tPoints = np.linspace(-L/2, L/2, 12)
+    Xpoints = np.vstack((
+        tPoints,
+        0*tPoints,
+        A*tPoints**2
+    ))
+    return Xpoints
+
+# points de passage
+xyzPoints = parabole_points(1.6, 0.4)
 
 # chemin et vecteurs
 sPath, xyzPath, TPath, CPath = p3d.path(xyzPoints, steps)
@@ -75,18 +86,13 @@ i = 0
 while i < steps:
     T = p3d.ainterp(s_sim[i], sPath, TPath)
     C = p3d.ainterp(s_sim[i], sPath, CPath)
-    a = acceleration(vs_sim[i], C, T, h, e, r, g) # on calcule l'accélération grâce au fichier
+    a = acceleration(vs_sim[i], C, T, h, e, r, g)
 
     a_sim[i+1] = a
     vs_sim[i+1] = vs_sim[i] + a*dt
     t_sim[i+1] = t_sim[i] + dt
     s_sim[i+1] = s_sim[i] + vs_sim[i+1] * dt
     i += 1
-    if s_sim[i] > length: # On arrête la simulation si on est plus loin que la piste
-        break
-
-print(a_sim)
-print(vs_sim)
 
 #Afficher les graphiques avec les données
 
