@@ -1,11 +1,10 @@
-import numpy
 import math
 
 def angle_bewteen_vectors(a, b):
     """Renvoie l'angle entre 2 vecteurs (unitaires)
 
     Args:
-        a ([array]): premier vecteur, il doit être unitaire
+        a (array): premier vecteur, il doit être unitaire
         b (array): deuxième vecteur unitaire
 
     Retruns:

@@ -1,17 +1,18 @@
 import path3d as p3d
 import numpy as np
 import matplotlib.pyplot as plt
-from simulation_3d import *
+import physic_model_3d as phys
+import shape as shape
 #from mpl_toolkits.mplot3d import Axes3D
 
 # Paramètre du temps de simulation
 t = 0
-tEnd = 3
+tEnd = 10
 dt = 0.033
 steps = int(tEnd//dt)
 
 # points de passage
-xyzPoints = p3d.looping_points()
+xyzPoints = shape.looping_points()
 
 # sauvetage des points dans un fichier
 np.savetxt('looping_points.txt', xyzPoints.T, fmt='%10.5f')
@@ -75,7 +76,7 @@ i = 0
 while i < steps:
     T = p3d.ainterp(s_sim[i], sPath, TPath)
     C = p3d.ainterp(s_sim[i], sPath, CPath)
-    a = acceleration(vs_sim[i], C, T, h, e, r, g) # on calcule l'accélération grâce au fichier
+    a = phys.acceleration(vs_sim[i], C, T, h, e, r, g) # on calcule l'accélération grâce au fichier
 
     a_sim[i+1] = a
     vs_sim[i+1] = vs_sim[i] + a*dt
@@ -84,9 +85,6 @@ while i < steps:
     i += 1
     if s_sim[i] > length: # On arrête la simulation si on est plus loin que la piste
         break
-
-print(a_sim)
-print(vs_sim)
 
 #Afficher les graphiques avec les données
 

@@ -153,31 +153,6 @@ def tilt_vectors(T, beta=0.):
     N = np.cross(T, B, axis=0)  # unit normale perpendiculaire
     return B, N
 
-def looping_points(steps=21):
-    """
-    Calcule les points de passage pour un chemin simple avec
-    un looping.  Le chemin a pour équations:
-        
-        x = t*(t-1)**2 + 0.5*t
-        y = 0.5*t*(t-1)**2
-        z = 2*t**2*(t-0.9)**2
-        
-    pour -1 ≤ t ≤ 1
-    
-    Paramètres:
-        steps: int (défaut 21)
-            le nombre de points
-    Retourne: array[3, steps]
-        coordonnées des point de passage
-    """
-    tPoints = np.linspace(-1, 1, 21)
-    Xpoints = np.vstack((
-        0.5*tPoints + tPoints*(tPoints-1)*(tPoints+1),
-        0.5*tPoints*(tPoints-1)*(tPoints+1),
-        2*tPoints*tPoints*(tPoints-0.9)*(tPoints+0.9)
-    ))
-    return Xpoints
-
 """"
 #### Code de test ####
 

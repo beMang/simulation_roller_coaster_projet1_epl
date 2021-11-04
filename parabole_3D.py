@@ -1,7 +1,8 @@
 import path3d as p3d
 import numpy as np
 import matplotlib.pyplot as plt
-from simulation_3d import *
+import physic_model_3d as phys
+import shape as shape
 #from mpl_toolkits.mplot3d import Axes3D
 
 # fichiers tests pour essayer de voir avec une parabole 2D, pour voir si le modèle est cohérent
@@ -12,20 +13,8 @@ tEnd = 14
 dt = 0.033
 steps = int(tEnd//dt)
 
-def parabole_points(L, H):
-    A = 4*H/L**2  # parabole d'équation z = A * x**2
-    # coordonnée horizontale: array[points] * [m]
-
-    tPoints = np.linspace(-L/2, L/2, 12)
-    Xpoints = np.vstack((
-        tPoints,
-        0*tPoints,
-        A*tPoints**2
-    ))
-    return Xpoints
-
 # points de passage
-xyzPoints = parabole_points(1.6, 0.4)
+xyzPoints = shape.parabole_points(1.6, 0.6)
 
 # chemin et vecteurs
 sPath, xyzPath, TPath, CPath = p3d.path(xyzPoints, steps)
@@ -86,7 +75,7 @@ i = 0
 while i < steps:
     T = p3d.ainterp(s_sim[i], sPath, TPath)
     C = p3d.ainterp(s_sim[i], sPath, CPath)
-    a = acceleration(vs_sim[i], C, T, h, e, r, g)
+    a = phys.acceleration(vs_sim[i], C, T, h, e, r, g)
 
     a_sim[i+1] = a
     vs_sim[i+1] = vs_sim[i] + a*dt
