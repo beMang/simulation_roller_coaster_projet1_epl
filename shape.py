@@ -1,4 +1,4 @@
-# Ce fichier contient plusieurs fonction pour faire différentes formes de chemin
+# Ce fichier contient plusieurs fonctions pour faire différentes formes de chemin
 import numpy as np
 
 
@@ -69,5 +69,13 @@ def droite(L, H, steps=12):
 
 
 def file_shape(filename):
+    """Renvoie les coordonés depuis un fichier
+
+    Args:
+        filename (str): nom du fichier
+
+    Returns:
+        array_numpy: tableau numpy
+    """
     data = np.loadtxt(filename, int, unpack=True)
     return data
