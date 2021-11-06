@@ -21,6 +21,7 @@ sPath, xyzPath, TPath, CPath = p3d.path(xyzPoints, steps)
 
 # points jalons à afficher sur le graphique
 length = sPath[-1]
+print(length)
 sMarks = np.linspace(0, length, steps)
 xyzMarks = np.empty((3, steps))    # coordonnées
 TMarks = np.empty((3, steps))  # vecteur tangent
@@ -82,6 +83,8 @@ while i < steps:
     t_sim[i+1] = t_sim[i] + dt
     s_sim[i+1] = s_sim[i] + vs_sim[i+1] * dt
     i += 1
+    if s_sim[i] > length:  # On arrête la simulation si on est plus loin que la piste
+        break
 
 #Afficher les graphiques avec les données
 

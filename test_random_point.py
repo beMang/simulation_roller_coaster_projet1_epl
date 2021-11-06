@@ -5,23 +5,23 @@ import physic_model_3d as phys
 import shape as shape
 #from mpl_toolkits.mplot3d import Axes3D
 
+# fichiers tests pour essayer de créer des chemins à partir d'un fichier (ça marche)
+
 # Paramètre du temps de simulation
 t = 0
-tEnd = 10
+tEnd = 40
 dt = 0.033
 steps = int(tEnd//dt)
 
-# points de passage
-xyzPoints = shape.looping_points()
-
-# sauvetage des points dans un fichier
-# np.savetxt('looping_points.txt', xyzPoints.T, fmt='%10.5f') on s'en branle pour l'instant
+# points de passage avec des points personalisé dans un fichier texte
+xyzPoints = shape.file_shape("xyzpoints.txt")
 
 # chemin et vecteurs
 sPath, xyzPath, TPath, CPath = p3d.path(xyzPoints, steps)
 
 # points jalons à afficher sur le graphique
 length = sPath[-1]
+print(length)
 sMarks = np.linspace(0, length, steps)
 xyzMarks = np.empty((3, steps))    # coordonnées
 TMarks = np.empty((3, steps))  # vecteur tangent
@@ -76,14 +76,14 @@ i = 0
 while i < steps:
     T = p3d.ainterp(s_sim[i], sPath, TPath)
     C = p3d.ainterp(s_sim[i], sPath, CPath)
-    a = phys.acceleration(vs_sim[i], C, T, h, e, r, g) # on calcule l'accélération grâce au fichier
+    a = phys.acceleration(vs_sim[i], C, T, h, e, r, g)
 
     a_sim[i+1] = a
     vs_sim[i+1] = vs_sim[i] + a*dt
     t_sim[i+1] = t_sim[i] + dt
     s_sim[i+1] = s_sim[i] + vs_sim[i+1] * dt
     i += 1
-    if s_sim[i] > length: # On arrête la simulation si on est plus loin que la piste
+    if s_sim[i] > length:  # On arrête la simulation si on est plus loin que la piste
         break
 
 #Afficher les graphiques avec les données
