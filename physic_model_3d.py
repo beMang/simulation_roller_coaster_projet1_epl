@@ -1,5 +1,6 @@
 import math
 
+
 def angle_bewteen_vectors(a, b):
     """Renvoie l'angle entre 2 vecteurs (unitaires)
 
@@ -13,6 +14,7 @@ def angle_bewteen_vectors(a, b):
     scalar_product = a[0]*b[0] + a[1]*b[1] + a[2]*b[2]
     return math.acos(scalar_product/(normal_of_vector(a)*normal_of_vector(b)))
 
+
 def normal_of_vector(vec):
     """Calcul la norme d'un vecteur à n dimension
 
@@ -23,10 +25,11 @@ def normal_of_vector(vec):
         float: la norme du vecteur
     """
     sum = 0
-    for comp in vec: # Je fais une boucle pour mettre au carré chaque composante
-        sum+=comp**2
+    for comp in vec:  # Je fais une boucle pour mettre au carré chaque composante
+        sum += comp**2
     return math.sqrt(sum)
-    
+
+
 def gs_normal(T, g):
     """Renvoie la norme du vecteur gs
 
@@ -37,8 +40,9 @@ def gs_normal(T, g):
     Returns:
         flaot: la norme de g
     """
-    angle = angle_bewteen_vectors([0,0,-1], T)
+    angle = angle_bewteen_vectors([0, 0, -1], T)
     return math.cos(angle)*g
+
 
 def gn_vector(T, g):
     """Renvoie le vecteur gn
@@ -51,9 +55,12 @@ def gn_vector(T, g):
         array: Le vecteur gn sous forme de tableau gn = g-gs
     """
     gs_norm = gs_normal(T, g)
-    g_vector = [0,0, g]
-    gs_vector = [T[0]*gs_norm, T[1]*gs_norm, T[2]*gs_norm] # Pour avoir gs comme vecteur, on multiplie sa norme par T (vecteur unitaire)
-    return [g_vector[0] - gs_vector[0], g_vector[1]-gs_vector[1], g_vector[2]-gs_vector[1]] # on soustrait chaque composante car gn = g - gs
+    g_vector = [0, 0, g]
+    # Pour avoir gs comme vecteur, on multiplie sa norme par T (vecteur unitaire)
+    gs_vector = [T[0]*gs_norm, T[1]*gs_norm, T[2]*gs_norm]
+    # on soustrait chaque composante car gn = g - gs
+    return [g_vector[0] - gs_vector[0], g_vector[1]-gs_vector[1], g_vector[2]-gs_vector[1]]
+
 
 def denominator_acceleration(r, h):
     """Calcul le dénominateur de notre grosse équation
@@ -65,7 +72,8 @@ def denominator_acceleration(r, h):
     Returns:
         float: le dénominateur
     """
-    return (1 +(2*(r**2))/(5*(h**2))) # Dénominateur
+    return (1 + (2*(r**2))/(5*(h**2)))  # Dénominateur
+
 
 def norm_vector_gn(C, Vs, gn):
     """Renvoie la norme du "gros" vecteur qui est au numérateur
@@ -80,10 +88,13 @@ def norm_vector_gn(C, Vs, gn):
     """
     sq_spd = Vs**2
     speed_vector = [C[0]*sq_spd, C[1]*sq_spd, C[2]*sq_spd]
-    total_vector = [speed_vector[0]-gn[0], speed_vector[1]-gn[1], speed_vector[2]-gn[2]] # On soustrait les 2 vecteurs (composante par composante)
+    # On soustrait les 2 vecteurs (composante par composante)
+    total_vector = [speed_vector[0]-gn[0],
+                    speed_vector[1]-gn[1], speed_vector[2]-gn[2]]
     return normal_of_vector(total_vector)
 
-def numerator_acceleration(Vs, C, T,h, e, g):
+
+def numerator_acceleration(Vs, C, T, h, e, g):
     """Renvoie le numérateur de notre grosse équation
 
     Args:
@@ -97,7 +108,8 @@ def numerator_acceleration(Vs, C, T,h, e, g):
     Returns:
         float: le numérateur de l'équation
     """
-    return (gs_normal(T, g)-e*Vs*norm_vector_gn(C, Vs, gn_vector(T,g))/h)
+    return (gs_normal(T, g)-e*Vs*norm_vector_gn(C, Vs, gn_vector(T, g))/h)
+
 
 def acceleration(Vs, C, T, h, e, r, g):
     """Renvoie la valeur de l'accélération en fonction des différents paramètres
@@ -122,6 +134,6 @@ def test():
         Imprime la valeur de l'accélération avec l'exercice donné dans le document
     """
     T = [2/3, 2/3, 1/3]
-    C = [2,-2,0]
+    C = [2, -2, 0]
     h = math.sqrt(0.01**2 - (0.012**2)/4)
-    print(acceleration(2, C, T, h, 0.0004,0.01, 9))
+    print(acceleration(2, C, T, h, 0.0004, 0.01, 9))

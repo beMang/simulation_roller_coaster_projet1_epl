@@ -76,19 +76,20 @@ i = 0
 while i < steps:
     T = p3d.ainterp(s_sim[i], sPath, TPath)
     C = p3d.ainterp(s_sim[i], sPath, CPath)
-    a = phys.acceleration(vs_sim[i], C, T, h, e, r, g) # on calcule l'accélération grâce au fichier
+    # on calcule l'accélération grâce au fichier
+    a = phys.acceleration(vs_sim[i], C, T, h, e, r, g)
 
     a_sim[i+1] = a
     vs_sim[i+1] = vs_sim[i] + a*dt
     t_sim[i+1] = t_sim[i] + dt
     s_sim[i+1] = s_sim[i] + vs_sim[i+1] * dt
     i += 1
-    if s_sim[i] > length: # On arrête la simulation si on est plus loin que la piste
+    if s_sim[i] > length:  # On arrête la simulation si on est plus loin que la piste
         break
 
-#Afficher les graphiques avec les données
+# Afficher les graphiques avec les données
 
-#Graphique de la vitesse, l'accélératoin et la distance curviligne
+# Graphique de la vitesse, l'accélératoin et la distance curviligne
 plt.figure()
 plt.subplot(311)
 plt.plot(t_sim, vs_sim, label='vs')

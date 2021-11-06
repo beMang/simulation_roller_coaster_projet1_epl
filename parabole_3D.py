@@ -86,9 +86,9 @@ while i < steps:
     if s_sim[i] > length:  # On arrête la simulation si on est plus loin que la piste
         break
 
-#Afficher les graphiques avec les données
+# Afficher les graphiques avec les données
 
-#Graphique de la vitesse, l'accélératoin et la distance curviligne
+# Graphique de la vitesse, l'accélératoin et la distance curviligne
 plt.figure()
 plt.subplot(311)
 plt.plot(t_sim, vs_sim, label='vs')
