@@ -7,28 +7,28 @@ import shape as shape
 
 # fichiers tests pour essayer de créer des chemins à partir d'un fichier (ça marche)
 
-# Paramètre du temps de simulation
 t = 0
 tEnd = 40
 dt = 0.033
 steps = int(tEnd//dt)
+steps_graphic = steps
 
 # points de passage avec des points personalisé dans un fichier texte
 xyzPoints = shape.file_shape("xyzpoints.txt")
 
 # chemin et vecteurs
-sPath, xyzPath, TPath, CPath = p3d.path(xyzPoints, steps)
+sPath, xyzPath, TPath, CPath = p3d.path(xyzPoints, steps_graphic)
 
 # points jalons à afficher sur le graphique
 length = sPath[-1]
 print(length)
-sMarks = np.linspace(0, length, steps)
-xyzMarks = np.empty((3, steps))    # coordonnées
-TMarks = np.empty((3, steps))  # vecteur tangent
-CMarks = np.empty((3, steps))      # vecteur de courbure
+sMarks = np.linspace(0, length, steps_graphic)
+xyzMarks = np.empty((3, steps_graphic))    # coordonnées
+TMarks = np.empty((3, steps_graphic))  # vecteur tangent
+CMarks = np.empty((3, steps_graphic))      # vecteur de courbure
 
 # Interpolation du chemin
-for i in range(steps):
+for i in range(steps_graphic):
     xyz = p3d.ainterp(sMarks[i], sPath, xyzPath)
     T = p3d.ainterp(sMarks[i], sPath, TPath)
     C = p3d.ainterp(sMarks[i], sPath, CPath)
@@ -43,7 +43,7 @@ ax = fig.add_subplot(projection='3d')
 ax.set_box_aspect(np.ptp(xyzPath, axis=1))
 ax.plot(xyzPoints[0], xyzPoints[1], xyzPoints[2], 'bo', label='points')
 ax.plot(xyzPath[0], xyzPath[1], xyzPath[2], 'k-', lw=0.5, label='path')
-scale = 0.5*length/steps
+scale = 0.5*length/steps_graphic
 ax.quiver(xyzMarks[0], xyzMarks[1], xyzMarks[2],
           scale*TMarks[0], scale*TMarks[1], scale*TMarks[2],
           color='r', linewidth=0.5, label='T')
@@ -54,11 +54,13 @@ ax.legend()
 plt.show()
 
 # Simulation du mouvement de la bille
+
 # Paramètre rampe :
 h = 0.01
 e = 0.00046
 r = 0.008
 g = 9.81
+m=0.016
 
 # Données à remplir
 a_sim = np.zeros(steps+1)
@@ -66,11 +68,16 @@ vs_sim = np.zeros(steps+1)
 t_sim = np.zeros(steps+1)
 s_sim = np.zeros(steps+1)
 
+E_cin_sim = np.zeros(steps+1)
+E_pot_sim = np.zeros(steps+1)
+
 # Valeurs initiales
 a_sim[0] = 0
 vs_sim[0] = 0
 t_sim[0] = 0
 s_sim[0] = 0
+E_cin_sim[0] = 0
+E_pot_sim[0] = phys.potentiel_energy(m, xyzPoints[2][0], g)
 
 i = 0
 while i < steps:
@@ -82,6 +89,9 @@ while i < steps:
     vs_sim[i+1] = vs_sim[i] + a*dt
     t_sim[i+1] = t_sim[i] + dt
     s_sim[i+1] = s_sim[i] + vs_sim[i+1] * dt
+
+    E_cin_sim[i+1] = phys.cinetic_energy(m, vs_sim[i+1])
+    E_pot_sim[i+1] = phys.potentiel_energy(m, p3d.ainterp(s_sim[i+1], sPath, xyzPath)[2], g)
     i += 1
     if s_sim[i] > length:  # On arrête la simulation si on est plus loin que la piste
         break
@@ -101,5 +111,15 @@ plt.xlabel('t [s]')
 plt.subplot(313)
 plt.plot(t_sim, s_sim, label='s')
 plt.ylabel('s [m]')
+plt.xlabel('t [s]')
+plt.show()
+
+#Graphiques des énergies
+plt.figure()
+plt.plot(t_sim, E_pot_sim, 'b-', label='Ep/m')
+plt.plot(t_sim, E_cin_sim, 'r-', label='Ek/m')
+plt.plot(t_sim, E_pot_sim+E_cin_sim, 'k-', label='E/m')
+plt.legend()
+plt.ylabel('Energy/mass [J/kg]')
 plt.xlabel('t [s]')
 plt.show()

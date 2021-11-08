@@ -124,9 +124,34 @@ def acceleration(Vs, C, T, h, e, r, g):
         g (float): constante de gravité
 
     Returns:
-        [type]: [description]
+        float: résultats de l'équation en fonction de tous les paramètres
     """
     return numerator_acceleration(Vs, C, T, h, e, g)/denominator_acceleration(r, h)
+
+def cinetic_energy(m, v):
+    """Renvoie l'énergie cinétique d'une particule
+
+    Args:
+        m (float): masse de la particule (kg)
+        v (float): vitesse (m/s)
+
+    Returns:
+        float: énergie cinétique en joule de la particule (J)
+    """
+    return 0.5*m*v**2
+
+def potentiel_energy(m, h,g):
+    """Renvoie l'énergie potentielle d'une particule
+
+    Args:
+        m (float): masse (kg)
+        h (float): hauteur
+        g (float): cst de gravité
+
+    Returns:
+        float: énergie potentielle en J
+    """
+    return m*g*h
 
 
 def test():
