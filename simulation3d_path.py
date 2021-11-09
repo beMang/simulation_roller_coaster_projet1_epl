@@ -8,10 +8,10 @@ import shape as shape
 # fichiers tests pour essayer de créer des chemins à partir d'un fichier (ça marche)
 
 t = 0
-tEnd = 40
-dt = 0.033
+tEnd = 20
+dt = 0.01
 steps = int(tEnd//dt)
-steps_graphic = steps
+steps_graphic = 50
 
 # points de passage avec des points personalisé dans un fichier texte
 xyzPoints = shape.file_shape("xyzpoints.txt")
@@ -92,9 +92,18 @@ while i < steps:
 
     E_cin_sim[i+1] = phys.cinetic_energy(m, vs_sim[i+1])
     E_pot_sim[i+1] = phys.potentiel_energy(m, p3d.ainterp(s_sim[i+1], sPath, xyzPath)[2], g)
-    i += 1
-    if s_sim[i] > length:  # On arrête la simulation si on est plus loin que la piste
+    if s_sim[i+1] > length:  # On arrête la simulation si on est plus loin que la piste
         break
+    i += 1
+
+if i != steps:
+    # On vire les données en trop
+    a_sim = np.delete(a_sim, np.s_[i:])
+    vs_sim = np.delete(vs_sim, np.s_[i:])
+    t_sim = np.delete(t_sim, np.s_[i:])
+    s_sim = np.delete(s_sim, np.s_[i:])
+    E_cin_sim = np.delete(E_cin_sim, np.s_[i:])
+    E_pot_sim = np.delete(E_pot_sim, np.s_[i:])
 
 # Afficher les graphiques avec les données
 

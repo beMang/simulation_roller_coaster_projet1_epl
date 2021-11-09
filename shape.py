@@ -69,7 +69,7 @@ def droite(L, H, steps=12):
 
 
 def file_shape(filename):
-    """Renvoie les coordonés depuis un fichier
+    """Renvoie les coordonés depuis un fichier (en cm)
 
     Args:
         filename (str): nom du fichier
@@ -78,4 +78,4 @@ def file_shape(filename):
         array_numpy: tableau numpy
     """
     data = np.loadtxt(filename, int, unpack=True)
-    return data
+    return data/100 # Pour avoir les données en metre
