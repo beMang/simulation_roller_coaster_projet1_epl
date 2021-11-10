@@ -14,7 +14,7 @@ steps = int(tEnd//dt)
 steps_graphic = 50
 
 # points de passage avec des points personalisé dans un fichier texte
-xyzPoints = shape.file_shape("xyzpoints.txt")
+xyzPoints = shape.file_shape("xyz_circuits.txt")
 
 # chemin et vecteurs
 sPath, xyzPath, TPath, CPath = p3d.path(xyzPoints, steps_graphic)
@@ -47,9 +47,9 @@ scale = 0.5*length/steps_graphic
 ax.quiver(xyzMarks[0], xyzMarks[1], xyzMarks[2],
           scale*TMarks[0], scale*TMarks[1], scale*TMarks[2],
           color='r', linewidth=0.5, label='T')
-ax.quiver(xyzMarks[0], xyzMarks[1], xyzMarks[2],
-          scale*CMarks[0], scale*CMarks[1], scale*CMarks[2],
-          color='g', linewidth=0.5, label='C')
+#ax.quiver(xyzMarks[0], xyzMarks[1], xyzMarks[2],
+#          scale*CMarks[0], scale*CMarks[1], scale*CMarks[2],
+#          color='g', linewidth=0.5, label='C')
 ax.legend()
 plt.show()
 
@@ -60,7 +60,7 @@ h = 0.01
 e = 0.00046
 r = 0.008
 g = 9.81
-m=0.016
+m = 0.016
 
 # Données à remplir
 a_sim = np.zeros(steps+1)
@@ -91,7 +91,8 @@ while i < steps:
     s_sim[i+1] = s_sim[i] + vs_sim[i+1] * dt
 
     E_cin_sim[i+1] = phys.cinetic_energy(m, vs_sim[i+1])
-    E_pot_sim[i+1] = phys.potentiel_energy(m, p3d.ainterp(s_sim[i+1], sPath, xyzPath)[2], g)
+    E_pot_sim[i+1] = phys.potentiel_energy(m,
+                                           p3d.ainterp(s_sim[i+1], sPath, xyzPath)[2], g)
     if s_sim[i+1] > length:  # On arrête la simulation si on est plus loin que la piste
         break
     i += 1
@@ -123,7 +124,7 @@ plt.ylabel('s [m]')
 plt.xlabel('t [s]')
 plt.show()
 
-#Graphiques des énergies
+# Graphiques des énergies
 plt.figure()
 plt.plot(t_sim, E_pot_sim, 'b-', label='Ep/m')
 plt.plot(t_sim, E_cin_sim, 'r-', label='Ek/m')
