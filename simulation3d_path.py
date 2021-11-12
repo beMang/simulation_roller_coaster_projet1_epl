@@ -11,7 +11,7 @@ t = 0
 tEnd = 20
 dt = 0.01
 steps = int(tEnd//dt)
-steps_graphic = 50
+steps_graphic = steps
 
 # points de passage avec des points personalisé dans un fichier texte
 xyzPoints = shape.file_shape("xyz_circuits.txt")

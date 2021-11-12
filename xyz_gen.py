@@ -24,5 +24,5 @@ def s_looping(origin, rayon, ecart):
 
 
 f = open("xyz_generated.txt", "w")
-f.write(s_looping((45, 10, 60), 10, 6))
+f.write(s_looping((45, 10, 60), 10, 5))
 f.close()
