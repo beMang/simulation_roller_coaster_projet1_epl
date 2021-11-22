@@ -161,4 +161,7 @@ def test():
     T = [2/3, 2/3, 1/3]
     C = [2, -2, 0]
     h = math.sqrt(0.01**2 - (0.012**2)/4)
+    print(h)
     print(acceleration(2, C, T, h, 0.0004, 0.01, 9))
+
+test()
