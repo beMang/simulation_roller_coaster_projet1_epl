@@ -1,31 +1,30 @@
+# Importation des librairies et fichiers nécessaires
 import path3d as p3d
 import numpy as np
 import matplotlib.pyplot as plt
 import physic_model_3d as phys
 import shape as shape
-#from mpl_toolkits.mplot3d import Axes3D
+import math
 
-# fichiers tests pour essayer de créer des chemins à partir d'un fichier (ça marche)
-
+# Initialisation des variables temporels de la simulation
 t = 0
 tEnd = 20
-dt = 0.01
+dt = 0.001
 steps = int(tEnd//dt)
-steps_graphic = steps
+steps_graphic = steps  # Pour le lag de la représentation graphique si dt est trop petit
 
-# points de passage avec des points personalisé dans un fichier texte
+# Récupération des points de passages
 xyzPoints = shape.file_shape("xyz_circuits.txt")
 
-# chemin et vecteurs
+# Utilisation de path3d pour obtenir les points et les vecteurs tangents et de courbure
 sPath, xyzPath, TPath, CPath = p3d.path(xyzPoints, steps_graphic)
 
-# points jalons à afficher sur le graphique
+# Points jalons à afficher sur le graphique
 length = sPath[-1]
-print(length)
 sMarks = np.linspace(0, length, steps_graphic)
-xyzMarks = np.empty((3, steps_graphic))    # coordonnées
-TMarks = np.empty((3, steps_graphic))  # vecteur tangent
-CMarks = np.empty((3, steps_graphic))      # vecteur de courbure
+xyzMarks = np.empty((3, steps_graphic))    # Coordonnées
+TMarks = np.empty((3, steps_graphic))  # Vecteur tangent
+CMarks = np.empty((3, steps_graphic))      # Vecteur de courbure
 
 # Interpolation du chemin
 for i in range(steps_graphic):
@@ -37,7 +36,7 @@ for i in range(steps_graphic):
     CMarks[:, i] = C
     TMarks[:, i] = T
 
-# graphique 3D : points, chemin et vecteurs
+# Affichage du graphique 3D
 fig = plt.figure()
 ax = fig.add_subplot(projection='3d')
 ax.set_box_aspect(np.ptp(xyzPath, axis=1))
@@ -47,27 +46,30 @@ scale = 0.5*length/steps_graphic
 ax.quiver(xyzMarks[0], xyzMarks[1], xyzMarks[2],
           scale*TMarks[0], scale*TMarks[1], scale*TMarks[2],
           color='r', linewidth=0.5, label='T')
-#ax.quiver(xyzMarks[0], xyzMarks[1], xyzMarks[2],
-#          scale*CMarks[0], scale*CMarks[1], scale*CMarks[2],
-#          color='g', linewidth=0.5, label='C')
+ax.quiver(xyzMarks[0], xyzMarks[1], xyzMarks[2],
+          scale*CMarks[0], scale*CMarks[1], scale*CMarks[2],
+          color='g', linewidth=0.5, label='C')
 ax.legend()
 plt.show()
 
 # Simulation du mouvement de la bille
 
-# Paramètre rampe :
-h = 0.01
-e = 0.00046
-r = 0.008
-g = 9.81
-m = 0.016
+# Paramètre physique
+e = 0.00046  # Coefficient de frottement
+r = 0.008  # Rayon de la bille
+m = 0.016  # Masse de la bille
+b = 0.014  # Ecart des rails
+g = 9.81  # Accélération du à la gravité
+h = math.sqrt(r**2 - (b**2)/4)
+print(h)
 
-# Données à remplir
+# Données à remplir (tableaux numpy vides)
 a_sim = np.zeros(steps+1)
 vs_sim = np.zeros(steps+1)
 t_sim = np.zeros(steps+1)
 s_sim = np.zeros(steps+1)
 
+# Tableaux des énergies
 E_cin_sim = np.zeros(steps+1)
 E_pot_sim = np.zeros(steps+1)
 
@@ -79,12 +81,17 @@ s_sim[0] = 0
 E_cin_sim[0] = 0
 E_pot_sim[0] = phys.potentiel_energy(m, xyzPoints[2][0], g)
 
+# Boucle principale de la simulation
 i = 0
 while i < steps:
+    # Interpolations des vecteurs
     T = p3d.ainterp(s_sim[i], sPath, TPath)
     C = p3d.ainterp(s_sim[i], sPath, CPath)
+
+    # Calcul de l'accélération
     a = phys.acceleration(vs_sim[i], C, T, h, e, r, g)
 
+    # Stockage des valeurs
     a_sim[i+1] = a
     vs_sim[i+1] = vs_sim[i] + a*dt
     t_sim[i+1] = t_sim[i] + dt
@@ -93,12 +100,14 @@ while i < steps:
     E_cin_sim[i+1] = phys.cinetic_energy(m, vs_sim[i+1])
     E_pot_sim[i+1] = phys.potentiel_energy(m,
                                            p3d.ainterp(s_sim[i+1], sPath, xyzPath)[2], g)
-    if s_sim[i+1] > length:  # On arrête la simulation si on est plus loin que la piste
+
+    # Arrêt de la simulation si on est plus loin que la piste
+    if s_sim[i+1] > length:
         break
     i += 1
 
+# Suppresion des données superflues (si arrêt de la simulation)
 if i != steps:
-    # On vire les données en trop
     a_sim = np.delete(a_sim, np.s_[i:])
     vs_sim = np.delete(vs_sim, np.s_[i:])
     t_sim = np.delete(t_sim, np.s_[i:])

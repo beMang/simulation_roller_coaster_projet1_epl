@@ -50,26 +50,9 @@ def parabole_points(L, H, steps=12):
     return Xpoints
 
 
-def droite(L, H, steps=12):
-    """Renvoie une droite qui va tout droit
-
-    Args:
-        L (float): la longueur de la droite
-        H (float): la hauteur de la droite
-        steps (int, optional): le nombre de point. Defaults to 12.
-    """
-    tPoints = np.linspace(-L/2, L/2, steps)
-    slope = H/L
-    xpoints = np.vstack((
-        tPoints,
-        0*tPoints,
-        -slope*tPoints
-    ))
-    return xpoints
-
-
 def file_shape(filename):
-    """Renvoie les coordonés depuis un fichier (en cm)
+    """Renvoie les coordonnés depuis un fichier (en cm)
+    Format du ficher : x y z
 
     Args:
         filename (str): nom du fichier
@@ -78,4 +61,4 @@ def file_shape(filename):
         array_numpy: tableau numpy
     """
     data = np.loadtxt(filename, int, unpack=True)
-    return data/100 # Pour avoir les données en metre
+    return data/100  # Pour avoir les données en mètre

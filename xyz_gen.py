@@ -7,7 +7,7 @@ def s_looping(origin, rayon, ecart):
         ecart (float): écart du looping
 
     Returns:
-        [type]: [description]
+        str: Chaine des caractères avec les coordonés
     """
     points = [origin]
     points.append((origin[0]+rayon/2, origin[1], origin[2]))

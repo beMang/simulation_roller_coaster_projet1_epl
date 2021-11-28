@@ -2,7 +2,7 @@ import math
 
 
 def angle_bewteen_vectors(a, b):
-    """Renvoie l'angle entre 2 vecteurs (unitaires)
+    """Renvoie l'angle entre 2 vecteurs
 
     Args:
         a (array): premier vecteur, il doit être unitaire
@@ -12,10 +12,10 @@ def angle_bewteen_vectors(a, b):
         Valeur de l'angle en radian
     """
     scalar_product = a[0]*b[0] + a[1]*b[1] + a[2]*b[2]
-    return math.acos(scalar_product/(normal_of_vector(a)*normal_of_vector(b)))
+    return math.acos(scalar_product/(norm_of_vector(a)*norm_of_vector(b)))
 
 
-def normal_of_vector(vec):
+def norm_of_vector(vec):
     """Calcul la norme d'un vecteur à n dimension
 
     Args:
@@ -55,11 +55,11 @@ def gn_vector(T, g):
         array: Le vecteur gn sous forme de tableau gn = g-gs
     """
     gs_norm = gs_normal(T, g)
-    g_vector = [0, 0, g]
+    g_vector = [0, 0, -g]
     # Pour avoir gs comme vecteur, on multiplie sa norme par T (vecteur unitaire)
     gs_vector = [T[0]*gs_norm, T[1]*gs_norm, T[2]*gs_norm]
     # on soustrait chaque composante car gn = g - gs
-    return [g_vector[0] - gs_vector[0], g_vector[1]-gs_vector[1], g_vector[2]-gs_vector[1]]
+    return [g_vector[0] - gs_vector[0], g_vector[1]-gs_vector[1], g_vector[2]-gs_vector[2]]
 
 
 def denominator_acceleration(r, h):
@@ -91,7 +91,7 @@ def norm_vector_gn(C, Vs, gn):
     # On soustrait les 2 vecteurs (composante par composante)
     total_vector = [speed_vector[0]-gn[0],
                     speed_vector[1]-gn[1], speed_vector[2]-gn[2]]
-    return normal_of_vector(total_vector)
+    return norm_of_vector(total_vector)
 
 
 def numerator_acceleration(Vs, C, T, h, e, g):
@@ -156,12 +156,11 @@ def potentiel_energy(m, h,g):
 
 def test():
     """Teste de l'exercice
-        Imprime la valeur de l'accélération avec l'exercice donné dans le document
+        Imprime la valeur de l'accélération avec l'exercice donné dans le document donné par les professeurs
+        pour vérifier l'exactitude de la simulation
     """
     T = [2/3, 2/3, 1/3]
     C = [2, -2, 0]
     h = math.sqrt(0.01**2 - (0.012**2)/4)
     print(h)
     print(acceleration(2, C, T, h, 0.0004, 0.01, 9))
-
-test()
