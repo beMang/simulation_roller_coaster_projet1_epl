@@ -5,8 +5,8 @@ def angle_bewteen_vectors(a, b):
     """Renvoie l'angle entre 2 vecteurs
 
     Args:
-        a (array): premier vecteur, il doit être unitaire
-        b (array): deuxième vecteur unitaire
+        a (array): premier vecteur
+        b (array): deuxième vecteur
 
     Retruns:
         Valeur de l'angle en radian

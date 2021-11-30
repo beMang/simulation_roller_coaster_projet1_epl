@@ -1,4 +1,4 @@
-# Ce fichier contient plusieurs fonctions pour faire différentes formes de chemin
+# Ce fichier contient plusieurs fonctions pour faire différentes formes de chemin ainsi que une fonction pour générer les points d'un looping
 import numpy as np
 
 
@@ -50,7 +50,7 @@ def parabole_points(L, H, steps=12):
     return Xpoints
 
 
-def file_shape(filename):
+def xyz_from_file(filename):
     """Renvoie les coordonnés depuis un fichier (en cm)
     Format du ficher : x y z
 
@@ -62,3 +62,35 @@ def file_shape(filename):
     """
     data = np.loadtxt(filename, int, unpack=True)
     return data/100  # Pour avoir les données en mètre
+
+
+def generate_looping(origin, rayon, ecart):
+    """Méthode pour générer des points pour un looping
+
+    Args:
+        origin (tuple): point de départ
+        rayon (float): rayon du looping
+        ecart (float): écart du looping
+
+    Returns:
+        str: Chaine des caractères avec les coordonés
+    """
+    points = [origin]
+    points.append((origin[0]+rayon/2, origin[1], origin[2]))
+    points.append((origin[0]+rayon, origin[1], origin[2]+rayon/2))
+    points.append((origin[0]+rayon/2, origin[1]+ecart/2, origin[2]+rayon))
+    points.append((origin[0], origin[1]+ecart, origin[2]+rayon/2))
+    points.append((origin[0]+rayon/2, origin[1]+ecart, origin[2]))
+    points.append((origin[0]+rayon, origin[1]+ecart, origin[2]))
+
+    s = ""
+    for x, y, z in points:
+        s += "{x} {y} {z}\n".format(x=x, y=y, z=z)
+    return s
+
+
+# Enregistrement des points générés par la fonction generate_looping
+if __name__ == "__main__":
+    f = open("xyz_generated.txt", "w")
+    f.write(generate_looping((60, 45, 26), 6, 4))
+    f.close()

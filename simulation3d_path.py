@@ -3,18 +3,17 @@ import path3d as p3d
 import numpy as np
 import matplotlib.pyplot as plt
 import physic_model_3d as phys
-import shape as shape
-import math
+import shape
 
 # Initialisation des variables temporels de la simulation
 t = 0
 tEnd = 20
 dt = 0.001
 steps = int(tEnd//dt)
-steps_graphic = steps  # Pour le lag de la représentation graphique si dt est trop petit
+steps_graphic = 500  # Pour le lag de la représentation graphique si dt est trop petit
 
 # Récupération des points de passages
-xyzPoints = shape.file_shape("xyz_circuits.txt")
+xyzPoints = shape.xyz_from_file("xyz_circuits.txt")
 
 # Utilisation de path3d pour obtenir les points et les vecteurs tangents et de courbure
 sPath, xyzPath, TPath, CPath = p3d.path(xyzPoints, steps_graphic)
@@ -26,7 +25,7 @@ xyzMarks = np.empty((3, steps_graphic))    # Coordonnées
 TMarks = np.empty((3, steps_graphic))  # Vecteur tangent
 CMarks = np.empty((3, steps_graphic))      # Vecteur de courbure
 
-# Interpolation du chemin
+# Interpolation du chemin avec l'aide du fichier fourni
 for i in range(steps_graphic):
     xyz = p3d.ainterp(sMarks[i], sPath, xyzPath)
     T = p3d.ainterp(sMarks[i], sPath, TPath)
@@ -46,9 +45,11 @@ scale = 0.5*length/steps_graphic
 ax.quiver(xyzMarks[0], xyzMarks[1], xyzMarks[2],
           scale*TMarks[0], scale*TMarks[1], scale*TMarks[2],
           color='r', linewidth=0.5, label='T')
-ax.quiver(xyzMarks[0], xyzMarks[1], xyzMarks[2],
-          scale*CMarks[0], scale*CMarks[1], scale*CMarks[2],
-          color='g', linewidth=0.5, label='C')
+show_c_vector = False # Si on veut afficher les vecteurs de courbures ou pas
+if show_c_vector :
+    ax.quiver(xyzMarks[0], xyzMarks[1], xyzMarks[2],
+              scale*CMarks[0], scale*CMarks[1], scale*CMarks[2],
+              color='g', linewidth=0.5, label='C')
 ax.legend()
 plt.show()
 
@@ -60,8 +61,7 @@ r = 0.008  # Rayon de la bille
 m = 0.016  # Masse de la bille
 b = 0.014  # Ecart des rails
 g = 9.81  # Accélération du à la gravité
-h = math.sqrt(r**2 - (b**2)/4)
-print(h)
+h = np.sqrt(r**2 - (b**2)/4)
 
 # Données à remplir (tableaux numpy vides)
 a_sim = np.zeros(steps+1)
@@ -142,3 +142,6 @@ plt.legend()
 plt.ylabel('Energy/mass [J/kg]')
 plt.xlabel('t [s]')
 plt.show()
+
+# Affichage de la longueur du circuit
+print("Longueur du circuit : ",length, " m")
