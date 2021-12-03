@@ -23,7 +23,7 @@ def looping_points(steps=21):
     Xpoints = np.vstack((
         0.5*tPoints + tPoints*(tPoints-1)*(tPoints+1),
         0.5*tPoints*(tPoints-1)*(tPoints+1),
-        2*tPoints*tPoints*(tPoints-0.9)*(tPoints+0.9)
+        2*tPoints*tPoints*(tPoints-0.9)*(tPoints+0.9) + .5
     ))
     return Xpoints
 

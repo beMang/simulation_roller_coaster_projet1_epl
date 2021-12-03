@@ -1,20 +1,6 @@
 import math
 
 
-def angle_bewteen_vectors(a, b):
-    """Renvoie l'angle entre 2 vecteurs
-
-    Args:
-        a (array): premier vecteur
-        b (array): deuxième vecteur
-
-    Retruns:
-        Valeur de l'angle en radian
-    """
-    scalar_product = a[0]*b[0] + a[1]*b[1] + a[2]*b[2]
-    return math.acos(scalar_product/(norm_of_vector(a)*norm_of_vector(b)))
-
-
 def norm_of_vector(vec):
     """Calcul la norme d'un vecteur à n dimension
 
@@ -40,8 +26,7 @@ def gs_normal(T, g):
     Returns:
         flaot: la norme de g
     """
-    angle = angle_bewteen_vectors([0, 0, -1], T)
-    return math.cos(angle)*g
+    return -g*T[2]
 
 
 def gn_vector(T, g):
@@ -128,6 +113,7 @@ def acceleration(Vs, C, T, h, e, r, g):
     """
     return numerator_acceleration(Vs, C, T, h, e, g)/denominator_acceleration(r, h)
 
+
 def cinetic_energy(m, v):
     """Renvoie l'énergie cinétique d'une particule
 
@@ -140,7 +126,8 @@ def cinetic_energy(m, v):
     """
     return 0.5*m*v**2
 
-def potentiel_energy(m, h,g):
+
+def potentiel_energy(m, h, g):
     """Renvoie l'énergie potentielle d'une particule
 
     Args:
@@ -162,5 +149,8 @@ def test():
     T = [2/3, 2/3, 1/3]
     C = [2, -2, 0]
     h = math.sqrt(0.01**2 - (0.012**2)/4)
-    print(h)
     print(acceleration(2, C, T, h, 0.0004, 0.01, 9))
+
+
+if __name__ == "__main__":
+    test()
