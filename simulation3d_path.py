@@ -30,7 +30,7 @@ for i in range(steps_graphic):
     xyz = p3d.ainterp(sMarks[i], sPath, xyzPath)
     T = p3d.ainterp(sMarks[i], sPath, TPath)
     C = p3d.ainterp(sMarks[i], sPath, CPath)
-    
+
     xyzMarks[:, i] = xyz
     CMarks[:, i] = C
     TMarks[:, i] = T
@@ -45,8 +45,8 @@ scale = 0.5*length/steps_graphic
 ax.quiver(xyzMarks[0], xyzMarks[1], xyzMarks[2],
           scale*TMarks[0], scale*TMarks[1], scale*TMarks[2],
           color='r', linewidth=0.5, label='Vecteurs trajectoire')
-show_c_vector = False # Si on veut afficher les vecteurs de courbures ou pas
-if show_c_vector :
+show_c_vector = False  # Si on veut afficher les vecteurs de courbures ou pas
+if show_c_vector:
     ax.quiver(xyzMarks[0], xyzMarks[1], xyzMarks[2],
               scale*CMarks[0], scale*CMarks[1], scale*CMarks[2],
               color='g', linewidth=0.5, label='Vecteurs courbure')
@@ -56,7 +56,7 @@ plt.show()
 # Simulation du mouvement de la bille
 
 # Paramètre physique
-e = 0.0004  # Coefficient de frottement
+e = 0.0005  # Coefficient de frottement
 r = 0.008  # Rayon de la bille
 m = 0.008  # Masse de la bille
 b = 0.012  # Ecart des rails
@@ -78,7 +78,7 @@ a_sim[0] = 0
 vs_sim[0] = 0
 t_sim[0] = 0
 s_sim[0] = 0
-E_cin_sim[0] = phys.cinetic_energy(m, vs_sim[0])
+E_cin_sim[0] = phys.cinetic_energy(m, vs_sim[0], phys.inertia(r, h))
 E_pot_sim[0] = phys.potentiel_energy(m, xyzPoints[2][0], g)
 
 # Boucle principale de la simulation
@@ -98,7 +98,7 @@ while i < steps:
     s_sim[i+1] = s_sim[i] + vs_sim[i+1] * dt
 
     xyz = p3d.ainterp(s_sim[i+1], sPath, xyzPath)
-    E_cin_sim[i+1] = phys.cinetic_energy(m, vs_sim[i+1])
+    E_cin_sim[i+1] = phys.cinetic_energy(m, vs_sim[i+1], phys.inertia(r, h))
     E_pot_sim[i+1] = phys.potentiel_energy(m,
                                            xyz[2], g)
 
@@ -116,7 +116,7 @@ if i != steps:
     E_cin_sim = np.delete(E_cin_sim, np.s_[i:])
     E_pot_sim = np.delete(E_pot_sim, np.s_[i:])
 
-# Graphique de la vitesse, l'accélératoin et la distance curviligne
+# Graphique de la vitesse, l'accélération et la distance curviligne
 plt.figure()
 plt.subplot(311)
 plt.plot(t_sim, vs_sim, label='vs')
@@ -143,5 +143,5 @@ plt.xlabel('Temps [s]')
 plt.show()
 
 # Affichage de la longueur du circuit
-print("Longueur du circuit : ",length, " m")
+print("Longueur du circuit : ", length, " m")
 print("Temps de parcours : ", t_sim[-1], " secondes")

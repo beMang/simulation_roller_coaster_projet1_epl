@@ -47,19 +47,6 @@ def gn_vector(T, g):
     return [g_vector[0] - gs_vector[0], g_vector[1]-gs_vector[1], g_vector[2]-gs_vector[2]]
 
 
-def denominator_acceleration(r, h):
-    """Calcul le dénominateur de notre grosse équation
-
-    Args:
-        r (float): le rayon de la bille
-        h (float): la hauteur entre le centre de la bille et jsp quoi
-
-    Returns:
-        float: le dénominateur
-    """
-    return (1 + (2*(r**2))/(5*(h**2)))  # Dénominateur
-
-
 def norm_vector_gn(C, Vs, gn):
     """Renvoie la norme du "gros" vecteur qui est au numérateur
 
@@ -96,6 +83,19 @@ def numerator_acceleration(Vs, C, T, h, e, g):
     return (gs_normal(T, g)-e*Vs*norm_vector_gn(C, Vs, gn_vector(T, g))/h)
 
 
+def inertia(r, h):
+    """Renvoie le coefficient d'intertie (le dénominateur de l'équation)
+
+    Args:
+        r (float): le rayon de la bille
+        h (float): la hauteur entre le centre de la bille et les rails
+
+    Returns:
+        float: le coefficient
+    """
+    return 1 + 2/5*r**2/h**2
+
+
 def acceleration(Vs, C, T, h, e, r, g):
     """Renvoie la valeur de l'accélération en fonction des différents paramètres
 
@@ -111,20 +111,21 @@ def acceleration(Vs, C, T, h, e, r, g):
     Returns:
         float: résultats de l'équation en fonction de tous les paramètres
     """
-    return numerator_acceleration(Vs, C, T, h, e, g)/denominator_acceleration(r, h)
+    return numerator_acceleration(Vs, C, T, h, e, g)/inertia(r, h)
 
 
-def cinetic_energy(m, v):
+def cinetic_energy(m, v, I):
     """Renvoie l'énergie cinétique d'une particule
 
     Args:
         m (float): masse de la particule (kg)
         v (float): vitesse (m/s)
+        I (float): coefficient d'inertie
 
     Returns:
         float: énergie cinétique en joule de la particule (J)
     """
-    return 0.5*m*v**2
+    return 0.5*m*I*v**2
 
 
 def potentiel_energy(m, h, g):

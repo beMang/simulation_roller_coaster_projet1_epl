@@ -1,14 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
-    
-    
-# Paramètres physiques:
-g = 9.81 # accélération de gravitation [m/s**2]
-b = 0.014 # écart des rails [m]
-r = 0.016 # diamètre de la bille [m]
-h = np.sqrt(r**2 - b**2/4) # hauteur du centre de la bille sur les rails [m]
 
-e1 = 0.0011 # coefficient de frottement linéaire [m/(m/s)]
+
+# Paramètres physiques:
+g = 9.81  # accélération de gravitation [m/s**2]
+b = 0.012  # écart des rails [m]
+r = 0.008  # diamètre de la bille [m]
+h = np.sqrt(r**2 - b**2/4)  # hauteur du centre de la bille sur les rails [m]
+
+e1 = 0.0005  # coefficient de frottement linéaire [m/(m/s)]
 
 # Dimensions de la piste (parabole)
 #             |-----------L-----------|
@@ -17,12 +17,12 @@ e1 = 0.0011 # coefficient de frottement linéaire [m/(m/s)]
 #                +++             +++    H
 #                   ++++     ++++       |
 #                       +++++          ---
-L = 0.681*2 # longueur horizontale [m]
-H = 0.412 # hauteur verticale [m]
-A = 4*H/L**2 # parabole d'équation z = A * x**2
+L = 0.681*2  # longueur horizontale [m]
+H = 0.412  # hauteur verticale [m]
+A = 4*H/L**2  # parabole d'équation z = A * x**2
 
 # Calcul de la piste:
-points = 101 # nombre de points générés
+points = 101  # nombre de points générés
 dx = L / points
 # coordonnée horizontale: array[points] * [m]
 xPath = np.linspace(-L/2, L/2, points)
@@ -45,14 +45,14 @@ plt.show()
 
 # paramètres pour la simulation:
 tEnd = 8.4  # durée de la simulation [s]
-dt = 0.00033 # pas de la simulation [s]
+dt = 0.001  # pas de la simulation [s]
 
-steps = int(tEnd / dt) # nombre de pas de la simulatio
-tSim = np.zeros(steps+1) # temps: array[steps+1] * [s]
-sSim = np.zeros(steps+1) # distance curviligne: array[steps+1] * [m]
-VsSim = np.zeros(steps+1) # vitesse tangentielle: array[steps+1] * [m/s]
+steps = int(tEnd / dt)  # nombre de pas de la simulatio
+tSim = np.zeros(steps+1)  # temps: array[steps+1] * [s]
+sSim = np.zeros(steps+1)  # distance curviligne: array[steps+1] * [m]
+VsSim = np.zeros(steps+1)  # vitesse tangentielle: array[steps+1] * [m/s]
 
-M = 1 + 2/5*r**2/h**2 # coefficient d'inertie [1]
+M = 1 + 2/5*r**2/h**2  # coefficient d'inertie [1]
 
 # valeurs initiales:
 tSim[0] = 0
@@ -63,16 +63,16 @@ i = 0
 # boucle de simulation:
 while i < steps:
     x = np.interp(sSim[i], sPath, xPath)
-    p = 2*A*x # pente dz/dx
+    p = 2*A*x  # pente dz/dx
     cos_beta = 1 / np.sqrt(1+p*p)
     sin_beta = p / np.sqrt(1+p*p)
     c = 2*A / (1 + p*p)**1.5  # courbure
 
     As = (-g*sin_beta - e1*VsSim[i]/h * (g*cos_beta + c*VsSim[i]**2)) / M
-   
+
     VsSim[i+1] = VsSim[i] + As * dt
     sSim[i+1] = sSim[i] + VsSim[i+1] * dt
-    tSim[i+1] = tSim[i] + dt    
+    tSim[i+1] = tSim[i] + dt
     i = i+1
 
 zSim = np.interp(sSim, sPath, zPath)
@@ -93,7 +93,7 @@ plt.ylabel('z [m]')
 plt.xlabel('t [s]')
 plt.show()
 
-EpSim = g*zSim # énergie potentielle spécifique [m**2/s**2]
+EpSim = g*zSim  # énergie potentielle spécifique [m**2/s**2]
 EkSim = 0.5*M*VsSim**2  # énergie cinétique spécifique [m**2/s**2]
 
 # plot énergies
@@ -112,7 +112,7 @@ np.savetxt('simulation_data.txt',
 
 # charger les données expérimentales
 tExp, sExp, VsExp, AsExp = \
-      np.loadtxt('tracker_data.txt', unpack=True, skiprows=2)
+    np.loadtxt('tracker_data.txt', unpack=True, skiprows=2)
 
 # plot données expérimentales
 plt.figure()
