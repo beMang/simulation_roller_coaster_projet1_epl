@@ -8,7 +8,8 @@ b = 0.012  # écart des rails [m]
 r = 0.008  # diamètre de la bille [m]
 h = np.sqrt(r**2 - b**2/4)  # hauteur du centre de la bille sur les rails [m]
 
-e1 = 0.0005  # coefficient de frottement linéaire [m/(m/s)]
+e1 = 0.0004  # coefficient de frottement linéaire [m/(m/s)]
+e2 = 0.0002
 
 # Dimensions de la piste (parabole)
 #             |-----------L-----------|
@@ -75,22 +76,54 @@ while i < steps:
     tSim[i+1] = tSim[i] + dt
     i = i+1
 
+
+tSim2 = np.zeros(steps+1)  # temps: array[steps+1] * [s]
+sSim2 = np.zeros(steps+1)  # distance curviligne: array[steps+1] * [m]
+VsSim2 = np.zeros(steps+1)  # vitesse tangentielle: array[steps+1] * [m/s]
+
+M = 1 + 2/5*r**2/h**2  # coefficient d'inertie [1]
+
+# valeurs initiales:
+tSim2[0] = 0
+sSim2[0] = 0
+VsSim2[0] = 0
+i = 0
+
+# boucle de simulation:
+while i < steps:
+    x = np.interp(sSim2[i], sPath, xPath)
+    p = 2*A*x  # pente dz/dx
+    cos_beta = 1 / np.sqrt(1+p*p)
+    sin_beta = p / np.sqrt(1+p*p)
+    c = 2*A / (1 + p*p)**1.5  # courbure
+
+    As = (-g*sin_beta - e2*VsSim[i]/h * (g*cos_beta + c*VsSim[i]**2)) / M
+
+    VsSim2[i+1] = VsSim2[i] + As * dt
+    sSim2[i+1] = sSim2[i] + VsSim2[i+1] * dt
+    tSim2[i+1] = tSim2[i] + dt
+    i = i+1
+
 zSim = np.interp(sSim, sPath, zPath)
 
 # plot distance et vitesse et hauteur
 plt.figure()
 plt.subplot(311)
-plt.plot(tSim, sSim, label='s')
+plt.plot(tSim, sSim, 'b-', label='Distance avec e=0.0004')
+plt.plot(tSim2, sSim2, 'r-', label='Distance avec e=0.0002')
 plt.ylabel('s [m]')
 plt.xlabel('t [s]')
 plt.subplot(312)
-plt.plot(tSim, VsSim, label='vs')
+plt.plot(tSim, VsSim, "b-", label='Vitesse avec e=0.0004')
+plt.plot(tSim2, VsSim2, "r-", label='Vitesse avec e=0.0002')
 plt.ylabel('Vs [m/s]')
 plt.xlabel('t [s]')
+plt.legend()
 plt.subplot(313)
 plt.plot(tSim, zSim, label='z')
 plt.ylabel('z [m]')
 plt.xlabel('t [s]')
+plt.legend()
 plt.show()
 
 EpSim = g*zSim  # énergie potentielle spécifique [m**2/s**2]
@@ -116,7 +149,6 @@ tExp, sExp, VsExp, AsExp = \
 
 # plot données expérimentales
 plt.figure()
-
 plt.subplot(211)
 plt.plot(tExp, sExp, 'r:', label='exp')
 plt.plot(tSim, sSim, 'b-', label='sim')

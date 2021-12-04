@@ -47,7 +47,7 @@ def gn_vector(T, g):
     return [g_vector[0] - gs_vector[0], g_vector[1]-gs_vector[1], g_vector[2]-gs_vector[2]]
 
 
-def norm_vector_gn(C, Vs, gn):
+def norm_vector_rn(C, Vs, gn):
     """Renvoie la norme du "gros" vecteur qui est au numérateur
 
     Args:
@@ -80,7 +80,7 @@ def numerator_acceleration(Vs, C, T, h, e, g):
     Returns:
         float: le numérateur de l'équation
     """
-    return (gs_normal(T, g)-e*Vs*norm_vector_gn(C, Vs, gn_vector(T, g))/h)
+    return (gs_normal(T, g)-e*Vs*norm_vector_rn(C, Vs, gn_vector(T, g))/h)
 
 
 def inertia(r, h):
@@ -115,7 +115,7 @@ def acceleration(Vs, C, T, h, e, r, g):
 
 
 def cinetic_energy(m, v, I):
-    """Renvoie l'énergie cinétique d'une particule
+    """Renvoie l'énergie cinétique spécifique d'une particule
 
     Args:
         m (float): masse de la particule (kg)
@@ -123,7 +123,7 @@ def cinetic_energy(m, v, I):
         I (float): coefficient d'inertie
 
     Returns:
-        float: énergie cinétique en joule de la particule (J)
+        float: énergie cinétique spécifique en joule de la particule (J)
     """
     return 0.5*m*I*v**2
 

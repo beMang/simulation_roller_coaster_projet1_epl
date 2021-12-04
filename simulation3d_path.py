@@ -116,7 +116,7 @@ if i != steps:
     E_cin_sim = np.delete(E_cin_sim, np.s_[i:])
     E_pot_sim = np.delete(E_pot_sim, np.s_[i:])
 
-# Graphique de la vitesse, l'accélération et la distance curviligne
+# Graphique de la vitesse, l'accélération tangentielle et la distance curviligne
 plt.figure()
 plt.subplot(311)
 plt.plot(t_sim, vs_sim, label='vs')
