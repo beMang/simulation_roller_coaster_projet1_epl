@@ -92,5 +92,5 @@ def generate_looping(origin, rayon, ecart):
 # Enregistrement des points générés par la fonction generate_looping
 if __name__ == "__main__":
     f = open("xyz_generated.txt", "w")
-    f.write(generate_looping((60, 45, 26), 6, 4))
+    f.write(generate_looping((55, 14.5, 43), 9, 3.7))
     f.close()

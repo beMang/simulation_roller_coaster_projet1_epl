@@ -8,12 +8,12 @@ import shape
 # Initialisation des variables temporels de la simulation
 t = 0
 tEnd = 20
-dt = 0.001
+dt = 0.0001
 steps = int(tEnd//dt)
-steps_graphic = 500  # Pour le lag de la représentation graphique si dt est trop petit
+steps_graphic = 400  # Pour le lag de la représentation graphique si dt est trop petit
 
 # Récupération des points de passages
-xyzPoints = shape.xyz_from_file("xyz_circuits.txt")
+xyzPoints = shape.xyz_from_file("xyz_circuit_real.txt")
 
 # Utilisation de path3d pour obtenir les points et les vecteurs tangents et de courbure
 sPath, xyzPath, TPath, CPath = p3d.path(xyzPoints, steps_graphic)
@@ -56,10 +56,10 @@ plt.show()
 # Simulation du mouvement de la bille
 
 # Paramètre physique
-e = 0.0005  # Coefficient de frottement
+e = 0.0007  # Coefficient de frottement
 r = 0.008  # Rayon de la bille
 m = 0.008  # Masse de la bille
-b = 0.012  # Ecart des rails
+b = 0.014  # Ecart des rails
 g = 9.81  # Accélération du à la gravité
 h = np.sqrt(r**2 - (b**2)/4)
 
@@ -107,7 +107,7 @@ while i < steps:
         break
     i += 1
 
-# Suppresion des données superflues (si arrêt de la simulation)
+# Suppression des données superflues (si arrêt de la simulation)
 if i != steps:
     a_sim = np.delete(a_sim, np.s_[i:])
     vs_sim = np.delete(vs_sim, np.s_[i:])
