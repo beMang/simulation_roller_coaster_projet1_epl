@@ -13,7 +13,7 @@ steps = int(tEnd//dt)
 steps_graphic = 400  # Pour le lag de la représentation graphique si dt est trop petit
 
 # Récupération des points de passages
-xyzPoints = shape.xyz_from_file("xyz_circuit_real.txt")
+xyzPoints = shape.xyz_from_file("datas/xyz_circuit_real.txt")
 
 # Utilisation de path3d pour obtenir les points et les vecteurs tangents et de courbure
 sPath, xyzPath, TPath, CPath = p3d.path(xyzPoints, steps_graphic)
@@ -56,7 +56,7 @@ plt.show()
 # Simulation du mouvement de la bille
 
 # Paramètre physique
-e = 0.0007  # Coefficient de frottement
+e = 0.00073  # Coefficient de frottement
 r = 0.008  # Rayon de la bille
 m = 0.008  # Masse de la bille
 b = 0.014  # Ecart des rails

@@ -140,12 +140,12 @@ plt.xlabel('t [s]')
 plt.show()
 
 # sauver les données de simulation
-np.savetxt('simulation_data.txt',
+np.savetxt('datas/simulation_data.txt',
            np.column_stack((tSim, sSim, VsSim)), fmt='%10.5f')
 
 # charger les données expérimentales
 tExp, sExp, VsExp, AsExp = \
-    np.loadtxt('tracker_data.txt', unpack=True, skiprows=2)
+    np.loadtxt('datas/tracker_data.txt', unpack=True, skiprows=2)
 
 # plot données expérimentales
 plt.figure()

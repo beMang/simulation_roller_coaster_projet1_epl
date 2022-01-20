@@ -1,4 +1,4 @@
-# Ce fichier contient plusieurs fonctions pour faire différentes formes de chemin ainsi que une fonction pour générer les points d'un looping
+# Ce fichier contient plusieurs fonctions pour faire différentes formes de chemin ainsi que de sauvegarder ces points dans un fichier
 import numpy as np
 
 
@@ -91,6 +91,6 @@ def generate_looping(origin, rayon, ecart):
 
 # Enregistrement des points générés par la fonction generate_looping
 if __name__ == "__main__":
-    f = open("xyz_generated.txt", "w")
+    f = open("datas/xyz_generated.txt", "w")
     f.write(generate_looping((55, 14.5, 43), 9, 3.7))
     f.close()

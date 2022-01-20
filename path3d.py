@@ -1,6 +1,8 @@
 import numpy as np
 import scipy.interpolate as spip
 
+# Code fourni par les professeurs de l'UCL
+
 
 def path_points(points, steps=None):
     """
